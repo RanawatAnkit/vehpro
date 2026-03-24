@@ -1,0 +1,58 @@
+<h1>VehPro</h1>
+
+<button onclick="logout()">Logout</button>
+
+<h2>Add Car</h2>
+<form id="form">
+  <input name="name" placeholder="Car Name">
+  <input name="price" placeholder="Price">
+  <input type="file" name="image">
+  <button>Add</button>
+</form>
+
+<h2>Cars</h2>
+<div id="cars"></div>
+
+<script>
+const API = "http://YOUR_EC2_IP:5000";
+
+// Logout
+function logout(){
+  localStorage.removeItem("token");
+  window.location = "login.html";
+}
+
+// Add car
+document.getElementById("form").onsubmit = async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(e.target);
+
+  await fetch(API + "/add-car", {
+    method: "POST",
+    headers: {
+      "Authorization": localStorage.getItem("token")
+    },
+    body: formData
+  });
+
+  loadCars();
+};
+
+// Load cars
+async function loadCars(){
+  const res = await fetch(API + "/cars");
+  const data = await res.json();
+
+  document.getElementById("cars").innerHTML =
+    data.map(c => `
+      <div>
+        <h3>${c.name}</h3>
+        <p>₹${c.price}</p>
+        <img src="${c.image}" width="200"/>
+      </div>
+    `).join("");
+}
+
+loadCars();
+</script>
