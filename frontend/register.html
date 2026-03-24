@@ -1,20 +1,135 @@
-<h2>Register</h2>
-<input id="email" placeholder="email">
-<input id="password" type="password" placeholder="password">
-<button onclick="register()">Register</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VehPro Register</title>
 
-<script>
-const API = "http://YOUR_EC2_IP:5000";
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
-async function register() {
-  await fetch(API + "/register", {
-    method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      email: email.value,
-      password: password.value
-    })
-  });
-  alert("Registered");
-}
-</script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      height: 100vh;
+      background: linear-gradient(135deg, #020617, #0f172a);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+    }
+
+    /* Card */
+    .card {
+      background: #1e293b;
+      padding: 30px;
+      border-radius: 15px;
+      width: 320px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    /* Inputs */
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      background: #334155;
+      color: white;
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #94a3b8;
+    }
+
+    /* Button */
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      background: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 15px;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+
+    .footer a {
+      color: #22c55e;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>🚗 Create Account</h2>
+
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Password">
+
+    <button onclick="register()">Register</button>
+
+    <div class="footer">
+      Already have an account? <a href="login.html">Login</a>
+    </div>
+  </div>
+
+  <script>
+    const API = "http://YOUR_EC2_IP:5000";
+
+    async function register() {
+      const res = await fetch(API + "/register", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+          email: email.value,
+          password: password.value
+        })
+      });
+
+      const data = await res.json();
+
+      if(res.ok){
+        alert("Registered successfully ✅");
+        window.location = "login.html";
+      } else {
+        alert(data.message || "Registration failed ❌");
+      }
+    }
+  </script>
+
+</body>
+</html>
