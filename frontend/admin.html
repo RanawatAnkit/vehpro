@@ -2,6 +2,14 @@
 <html>
 <head>
   <title>Admin</title>
+  <script>
+const role = localStorage.getItem("role");
+
+if (role !== "admin") {
+  alert("Access denied");
+  window.location = "index.html";
+}
+</script>
   <style>
     body {
       margin: 0;

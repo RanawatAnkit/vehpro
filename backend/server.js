@@ -77,4 +77,13 @@ app.get("/cars", (req, res) => {
   });
 });
 
+app.post("/register", (req, res) => {
+  const { email, password, role } = req.body;
+
+  db.query(
+    "INSERT INTO users (email, password, role) VALUES (?, ?, ?)",
+    [email, password, role || "user"],
+    () => res.send("User registered")
+  );
+});
 app.listen(5000, () => console.log("Server running on 5000"));

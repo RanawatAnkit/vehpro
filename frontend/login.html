@@ -67,11 +67,9 @@ async function login() {
 
   const data = await res.json();
 
-  if (data.role === "admin") {
-    window.location = "admin.html";
-  } else {
-    window.location = "index.html";
-  }
+  localStorage.setItem("role", data.role);
+
+  window.location = "index.html";
 }
 </script>
 
