@@ -1,196 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>VehPro Dashboard</title>
+<h1>Cars</h1>
+<div id="cars"></div>
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<script>
+const API = "http://YOUR_EC2_IP:5000";
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
-    }
+async function loadCars() {
+  const res = await fetch(API + "/cars");
+  const data = await res.json();
 
-    body {
-      background: #0f172a;
-      color: #fff;
-      padding: 20px;
-    }
+  const container = document.getElementById("cars");
 
-    /* Header */
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 25px;
-    }
+  data.forEach(car => {
+    container.innerHTML += `
+      <div>
+        <img src="${car.image_url}" width="200"/>
+        <h3>${car.name}</h3>
+        <p>${car.price}</p>
+        <p>${car.description}</p>
+      </div>
+    `;
+  });
+}
 
-    h1 {
-      font-size: 32px;
-      font-weight: 600;
-    }
-
-    /* Buttons */
-    button {
-      cursor: pointer;
-      border: none;
-      border-radius: 8px;
-      transition: 0.3s;
-    }
-
-    button:hover {
-      opacity: 0.85;
-    }
-
-    /* Logout */
-    .logout-btn {
-      background: #ef4444;
-      color: white;
-      padding: 10px 18px;
-    }
-
-    /* Form */
-    form {
-      background: #1e293b;
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 30px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    form input {
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      outline: none;
-      background: #334155;
-      color: white;
-    }
-
-    input[type="file"] {
-      background: transparent;
-    }
-
-    .add-btn {
-      background: #22c55e;
-      color: white;
-      padding: 10px 16px;
-    }
-
-    /* Section Title */
-    h2 {
-      margin: 20px 0 10px;
-      font-weight: 500;
-    }
-
-    /* Cars Grid */
-    #cars {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-    }
-
-    /* Card */
-    .card {
-      background: #1e293b;
-      border-radius: 12px;
-      padding: 15px;
-      transition: 0.3s;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-    }
-
-    .card img {
-      width: 100%;
-      border-radius: 10px;
-      margin-top: 10px;
-      height: 150px;
-      object-fit: cover;
-    }
-
-    .price {
-      color: #22c55e;
-      font-weight: 600;
-      margin-top: 5px;
-    }
-
-  </style>
-</head>
-<body>
-
-  <!-- Header -->
-  <div class="header">
-    <h1>🚗 VehPro</h1>
-    <button class="logout-btn" onclick="logout()">Logout</button>
-  </div>
-
-  <!-- Add Car -->
-  <h2>Add Car</h2>
-  <form id="form">
-    <input name="name" placeholder="Car Name" required>
-    <input name="price" placeholder="Price" required>
-    <input type="file" name="image" required>
-    <button class="add-btn">Add</button>
-  </form>
-
-  <!-- Cars -->
-  <h2>Cars</h2>
-  <div id="cars"></div>
-
-  <script>
-    const API = "http://YOUR_EC2_IP:5000";
-
-    // Logout
-    function logout(){
-      localStorage.removeItem("token");
-      window.location = "login.html";
-    }
-
-    // Add car
-    document.getElementById("form").onsubmit = async (e) => {
-      e.preventDefault();
-
-      const formData = new FormData(e.target);
-
-      await fetch(API + "/add-car", {
-        method: "POST",
-        headers: {
-          "Authorization": localStorage.getItem("token")
-        },
-        body: formData
-      });
-
-      e.target.reset();
-      loadCars();
-    };
-
-    // Load cars
-    async function loadCars(){
-      const res = await fetch(API + "/cars");
-      const data = await res.json();
-
-      document.getElementById("cars").innerHTML =
-        data.map(c => `
-          <div class="card">
-            <h3>${c.name}</h3>
-            <p class="price">₹${c.price}</p>
-            <img src="${c.image}" />
-          </div>
-        `).join("");
-    }
-
-    loadCars();
-  </script>
-
-</body>
-</html>
+loadCars();
+</script>

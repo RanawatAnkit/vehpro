@@ -1,0 +1,27 @@
+<h2>Add Car</h2>
+
+<input id="name" placeholder="Car Name">
+<input id="price" placeholder="Price">
+<input id="image" placeholder="Image URL">
+<textarea id="desc" placeholder="Description"></textarea>
+
+<button onclick="addCar()">Add</button>
+
+<script>
+const API = "http://YOUR_EC2_IP:5000";
+
+async function addCar() {
+  await fetch(API + "/add-car", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      name: name.value,
+      price: price.value,
+      description: desc.value,
+      image_url: image.value
+    })
+  });
+
+  alert("Car Added!");
+}
+</script>
