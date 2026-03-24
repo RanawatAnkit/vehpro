@@ -1,8 +1,50 @@
-<div class="navbar">
-  <h2>VehPro 🚗</h2>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI';
+      background: linear-gradient(to right, #141e30, #243b55);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+    }
 
-<div class="form">
+    .box {
+      background: rgba(255,255,255,0.1);
+      padding: 30px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      width: 300px;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #00e5ff;
+      border: none;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
   <h2>Login</h2>
 
   <input id="email" placeholder="Email">
@@ -32,3 +74,6 @@ async function login() {
   }
 }
 </script>
+
+</body>
+</html>

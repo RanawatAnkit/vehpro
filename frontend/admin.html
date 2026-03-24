@@ -1,13 +1,54 @@
-<div class="navbar">
-  <h2>VehPro 🚗</h2>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI';
+      background: linear-gradient(to right, #000000, #434343);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+    }
 
-<div class="form">
+    .box {
+      background: rgba(255,255,255,0.1);
+      padding: 30px;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+      width: 350px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #00e5ff;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
   <h2>Add Car</h2>
 
   <input id="name" placeholder="Car Name">
   <input id="price" placeholder="Price">
-  <input id="image" placeholder="Image URL">
+  <input type="file" id="image">
   <textarea id="desc" placeholder="Description"></textarea>
 
   <button onclick="addCar()">Add Car</button>
@@ -17,17 +58,21 @@
 const API = "http://52.91.254.60:5000";
 
 async function addCar() {
+  const formData = new FormData();
+
+  formData.append("name", name.value);
+  formData.append("price", price.value);
+  formData.append("description", desc.value);
+  formData.append("image", image.files[0]);
+
   await fetch(API + "/add-car", {
     method: "POST",
-    headers: {"Content-Type": "application/json"},
-    body: JSON.stringify({
-      name: name.value,
-      price: price.value,
-      description: desc.value,
-      image_url: image.value
-    })
+    body: formData
   });
 
   alert("Car Added!");
 }
 </script>
+
+</body>
+</html>
