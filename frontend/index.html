@@ -17,24 +17,29 @@
       padding: 15px 30px;
       background: rgba(0,0,0,0.5);
       backdrop-filter: blur(10px);
+      align-items: center;
     }
 
-    .navbar a {
+    .nav-links a, .nav-links button {
       color: white;
-      margin-left: 20px;
+      margin-left: 15px;
       text-decoration: none;
-      font-weight: 500;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
     }
 
-    .navbar a:hover {
+    .nav-links a:hover, .nav-links button:hover {
       color: #00e5ff;
     }
 
-    /* GRID */
+    /* CONTAINER */
     .container {
       padding: 30px;
     }
 
+    /* GRID */
     .grid {
       display: flex;
       flex-wrap: wrap;
@@ -69,47 +74,81 @@
 
 <body>
 
+<!-- NAVBAR -->
 <div class="navbar">
-  <h2>VehPro</h2>
-  <div>
-    <a href="index.html">Home</a>
-    <a href="login.html">Login</a>
-    <a href="admin.html">upload</a>
-  </div>
+  <h2>VehPro 🚗</h2>
+  <div class="nav-links" id="navLinks"></div>
 </div>
 
+<!-- CONTENT -->
 <div class="container">
   <h1>Explore Cars</h1>
   <div id="cars" class="grid"></div>
 </div>
 
 <script>
-const role = localStorage.getItem("role");
+const API = "http://52.91.254.60:5000";
 
-const nav = document.createElement("div");
+/* 🔹 LOAD CARS */
+async function loadCars() {
+  try {
+    const res = await fetch(API + "/cars");
+
+    if (!res.ok) throw new Error("Server error");
+
+    const data = await res.json();
+
+    const container = document.getElementById("cars");
+    container.innerHTML = "";
+
+    data.forEach(car => {
+      container.innerHTML += `
+        <div class="card">
+          <img src="${car.image_url}">
+          <div class="card-content">
+            <h3>${car.name}</h3>
+            <p><b>${car.price}</b></p>
+            <p>${car.description}</p>
+          </div>
+        </div>
+      `;
+    });
+
+  } catch (err) {
+    console.error("Error loading cars:", err);
+  }
+}
+
+/* 🔹 NAVBAR ROLE LOGIC */
+const role = localStorage.getItem("role");
+const nav = document.getElementById("navLinks");
 
 if (!role) {
   nav.innerHTML = `
     <a href="login.html">Login</a>
     <a href="register.html">Register</a>
   `;
-} else if (role === "admin") {
+} 
+else if (role === "admin") {
   nav.innerHTML = `
     <a href="admin.html">Add Car</a>
     <button onclick="logout()">Logout</button>
   `;
-} else {
+} 
+else {
   nav.innerHTML = `
     <button onclick="logout()">Logout</button>
   `;
 }
 
-document.body.prepend(nav);
-
+/* 🔹 LOGOUT */
 function logout() {
   localStorage.clear();
   location.reload();
 }
+
+/* 🔹 INIT */
+loadCars();
 </script>
 
 </body>
