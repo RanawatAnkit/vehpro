@@ -40,30 +40,33 @@ app.post("/login", (req, res) => {
 
 // ADD CAR (ADMIN)
 app.post("/add-car", upload.single("image"), async (req, res) => {
-  const { name, price, description } = req.body;
-  const file = req.file;
-
-  const params = {
-    Bucket: "vehpro-images-ankit",
-    Key: Date.now() + "-" + file.originalname,
-    Body: file.buffer,
-    ContentType: file.mimetype
-  };
+  const { name, price, description, image_url } = req.body;
+  let finalImageUrl = image_url; // default = URL
 
   try {
-    const data = await s3.upload(params).promise();
+    // ✅ If file uploaded → upload to S3
+    if (req.file) {
+      const params = {
+        Bucket: "vehpro-images-ankit",
+        Key: Date.now() + "-" + req.file.originalname,
+        Body: req.file.buffer,
+        ContentType: req.file.mimetype
+      };
 
-    const imageUrl = data.Location;
+      const data = await s3.upload(params).promise();
+      finalImageUrl = data.Location;
+    }
 
+    // ✅ Save in DB (either S3 or URL)
     db.query(
       "INSERT INTO cars (name, price, description, image_url) VALUES (?, ?, ?, ?)",
-      [name, price, description, imageUrl],
+      [name, price, description, finalImageUrl],
       () => res.send("Car added")
     );
 
   } catch (err) {
     console.log(err);
-    res.status(500).send("Upload failed");
+    res.status(500).send("Error adding car");
   }
 });
 

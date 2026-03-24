@@ -48,7 +48,11 @@
 
   <input id="name" placeholder="Car Name">
   <input id="price" placeholder="Price">
-  <input type="file" id="image">
+  <!-- OPTION 1 -->
+<input type="file" id="imageFile">
+
+<!-- OPTION 2 -->
+<input id="imageUrl" placeholder="Or paste Image URL">
   <textarea id="desc" placeholder="Description"></textarea>
 
   <button onclick="addCar()">Add Car</button>
@@ -63,7 +67,22 @@ async function addCar() {
   formData.append("name", name.value);
   formData.append("price", price.value);
   formData.append("description", desc.value);
-  formData.append("image", image.files[0]);
+
+  const file = imageFile.files[0];
+  const url = imageUrl.value;
+
+  // ✅ If file selected → use file
+  if (file) {
+    formData.append("image", file);
+  } 
+  // ✅ Else use URL
+  else if (url) {
+    formData.append("image_url", url);
+  } 
+  else {
+    alert("Please upload image or enter URL");
+    return;
+  }
 
   await fetch(API + "/add-car", {
     method: "POST",
