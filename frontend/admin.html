@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | VehPro</title>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        if (localStorage.getItem("role") !== "admin") {
+            alert("Access Denied");
+            window.location = "index.html";
+        }
+    </script>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">VehPro Admin</a>
+        <div class="nav-links" id="navLinks"></div>
+    </nav>
+
+    <main class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <h1>Fleet Management</h1>
+            <button onclick="document.getElementById('addCarModal').style.display='block'" class="btn btn-primary">+ Add New Car</button>
+        </div>
+
+        <!-- ADD CAR FORM (Simple Section for this demo) -->
+        <div id="addCarModal" class="glass" style="padding: 2rem; margin-bottom: 4rem;">
+            <h2 style="margin-bottom: 1.5rem;">Add New Vehicle</h2>
+            <form id="addCarForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div class="input-group">
+                    <label>Car Name</label>
+                    <input type="text" id="name" placeholder="e.g. Model S" required>
+                </div>
+                <div class="input-group">
+                    <label>Brand</label>
+                    <input type="text" id="brand" placeholder="e.g. Tesla" required>
+                </div>
+                <div class="input-group">
+                    <label>Display Price</label>
+                    <input type="text" id="price" placeholder="e.g. $80,000" required>
+                </div>
+                <div class="input-group">
+                    <label>Year</label>
+                    <input type="number" id="year" value="2023" required>
+                </div>
+                <div class="input-group">
+                    <label>Mileage</label>
+                    <input type="number" id="mileage" placeholder="0" required>
+                </div>
+                <div class="input-group">
+                    <label>Fuel Type</label>
+                    <select id="fuel_type">
+                        <option value="Petrol">Petrol</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Electric">Electric</option>
+                        <option value="Hybrid">Hybrid</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Transmission</label>
+                    <select id="transmission">
+                        <option value="Automatic">Automatic</option>
+                        <option value="Manual">Manual</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Image Upload</label>
+                    <input type="file" id="imageFile">
+                </div>
+                <div class="input-group" style="grid-column: 1/-1;">
+                    <label>Description</label>
+                    <textarea id="description" rows="3" placeholder="Describe the vehicle..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="grid-column: 1/-1; padding: 1rem;">Confirm & Add Vehicle</button>
+            </form>
+        </div>
+
+        <h2 style="margin-bottom: 2rem;">Current Inventory</h2>
+        <div id="carsGrid" class="grid">
+            <!-- Loaded via app.js -->
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+    <script>
+        document.getElementById("addCarForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            
+            formData.append("name", document.getElementById("name").value);
+            formData.append("brand", document.getElementById("brand").value);
+            formData.append("price", document.getElementById("price").value);
+            formData.append("year", document.getElementById("year").value);
+            formData.append("mileage", document.getElementById("mileage").value);
+            formData.append("fuel_type", document.getElementById("fuel_type").value);
+            formData.append("transmission", document.getElementById("transmission").value);
+            formData.append("description", document.getElementById("description").value);
+
+            const file = document.getElementById("imageFile").files[0];
+            if (file) formData.append("image", file);
+
+            try {
+                const res = await fetch(`${API}/add-car`, {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${localStorage.getItem("token")}` },
+                    body: formData
+                });
+
+                if (res.ok) {
+                    alert("Car added successfully!");
+                    location.reload();
+                } else {
+                    alert("Failed to add car. Check your token/permissions.");
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        });
+    </script>
+</body>
+</html>

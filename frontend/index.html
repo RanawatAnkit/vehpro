@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VehPro | Premium Car Showcase</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">VehPro</a>
+        <div class="nav-links" id="navLinks">
+            <!-- Dynamic links from app.js -->
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="container" style="text-align: center; margin-top: 4rem; margin-bottom: 4rem;">
+        <h1 style="font-size: 3.5rem; font-weight: 800; margin-bottom: 1rem;">Experience the Future <br> of <span style="color: var(--primary);">Car Ownership</span></h1>
+        <p style="color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Discover, compare, and value your perfect vehicle with our AI-driven marketplace.</p>
+    </header>
+
+    <main class="container">
+        <!-- SEARCH & FILTER -->
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input glass" placeholder="Search by name or brand (e.g., Tesla, BMW)...">
+            <div style="display: flex; gap: 1rem;">
+                <input type="number" id="minPrice" placeholder="Min Price" class="glass" style="max-width: 120px;">
+                <input type="number" id="maxPrice" placeholder="Max Price" class="glass" style="max-width: 120px;">
+                <button onclick="loadCars(document.getElementById('searchInput').value, document.getElementById('minPrice').value, document.getElementById('maxPrice').value)" class="btn btn-primary">Filter</button>
+            </div>
+        </div>
+
+        <!-- CARS GRID -->
+        <h2 style="margin-bottom: 2rem;">Available Fleet</h2>
+        <div id="carsGrid" class="grid">
+            <!-- Loaded via app.js -->
+        </div>
+
+        <!-- PREDICTION SECTION -->
+        <section class="prediction-card glass" id="predictionTool" style="margin-bottom: 6rem;">
+            <h2 style="font-size: 2rem; margin-bottom: 1rem;">Car Price Predictor</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Get an instant market evaluation using our advanced pricing model.</p>
+            
+            <form id="predictionForm" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; text-align: left;">
+                <div class="input-group">
+                    <label>Brand</label>
+                    <select id="p-brand" class="glass" required>
+                        <option value="Tesla">Tesla</option>
+                        <option value="BMW">BMW</option>
+                        <option value="Toyota">Toyota</option>
+                        <option value="Honda">Honda</option>
+                        <option value="Mercedes">Mercedes-Benz</option>
+                        <option value="Audi">Audi</option>
+                        <option value="Ford">Ford</option>
+                        <option value="Porsche">Porsche</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Year of Manufacture</label>
+                    <input type="number" id="p-year" value="2022" min="1990" max="2026" class="glass" required>
+                </div>
+                <div class="input-group">
+                    <label>Current Mileage (miles)</label>
+                    <input type="number" id="p-mileage" placeholder="e.g. 15000" class="glass" required>
+                </div>
+                <div class="input-group">
+                    <label>Fuel Type</label>
+                    <select id="p-fuel" class="glass" required>
+                        <option value="Petrol">Petrol</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Electric">Electric</option>
+                        <option value="Hybrid">Hybrid</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="grid-column: 1/-1; padding: 1rem;">Predict Market Value</button>
+            </form>
+
+            <div id="predictionResult" style="display: none; margin-top: 3rem; padding-top: 3rem; border-top: 1px solid var(--glass-border);">
+                <span style="text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem; color: var(--text-muted);">Estimated Market Price</span>
+                <div id="predictedValue" class="result-price">$0.00</div>
+                <p style="font-size: 0.85rem; color: #94a3b8; max-width: 400px; margin: 0 auto;">Note: This prediction is based on current market trends and general depreciation models.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer style="text-align: center; padding: 3rem; color: var(--text-muted); border-top: 1px solid var(--glass-border);">
+        &copy; 2026 VehPro. All Rights Reserved. Built with Precision.
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

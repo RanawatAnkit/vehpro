@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | VehPro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="display: flex; align-items: center; justify-content: center;">
+
+    <div class="form-box glass" style="margin-top: 0;">
+        <h2 style="margin-bottom: 2rem; text-align: center;">Create Account</h2>
+        
+        <form id="registerForm">
+            <div class="input-group">
+                <label>Email Address</label>
+                <input type="email" id="email" placeholder="name@example.com" required>
+            </div>
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" id="password" placeholder="••••••••" required>
+            </div>
+            <div class="input-group">
+                <label>Role</label>
+                <select id="role" class="glass">
+                    <option value="user">Standard User</option>
+                    <option value="admin">Administrator</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Register</button>
+        </form>
+
+        <p style="text-align: center; margin-top: 2rem; font-size: 0.85rem; color: var(--text-muted);">
+            Already have an account? <a href="login.html" style="color: var(--primary); text-decoration: none;">Sign in</a>
+        </p>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        document.getElementById("registerForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const role = document.getElementById("role").value;
+
+            try {
+                const res = await fetch(`${API}/register`, {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({ email, password, role })
+                });
+
+                if (!res.ok) throw new Error("Registration failed");
+
+                alert("Account created successfully! Please login.");
+                window.location = "login.html";
+            } catch (err) {
+                alert(err.message);
+            }
+        });
+    </script>
+</body>
+</html>
