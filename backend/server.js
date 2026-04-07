@@ -1,11 +1,28 @@
 const express = require("express");
-const db = require("./db");
+const mysql = require("mysql2");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const multer = require("multer");
 const AWS = require("aws-sdk");
-require("dotenv").config();
+
+// CONFIGURATION (Hardcoded as requested)
+const DB_HOST = "car-db.cjyhkhxut1mz.us-east-1.rds.amazonaws.com";
+const DB_USER = "admin";
+const DB_PASS = "password123";
+const DB_NAME = "carsdb";
+const JWT_SECRET = "vehpro_secret_key_2026";
+const AWS_REGION = "us-east-1";
+const S3_BUCKET = "vehpro-images-ankit";
+const PORT = 5000;
+
+// Database Connection
+const db = mysql.createConnection({
+  host: DB_HOST,
+  user: DB_USER,
+  password: DB_PASS,
+  database: DB_NAME
+});
 
 const app = express();
 app.use(cors());
@@ -15,10 +32,10 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 // AWS Config
 AWS.config.update({
-  region: process.env.AWS_REGION
+  region: AWS_REGION
 });
 const s3 = new AWS.S3();
-const SECRET = process.env.JWT_SECRET || "fallback_secret";
+const SECRET = JWT_SECRET;
 
 // AUTH MIDDLEWARE
 const authenticate = (req, res, next) => {
@@ -107,7 +124,7 @@ app.post("/add-car", authenticate, adminOnly, upload.single("image"), async (req
   try {
     if (req.file) {
       const params = {
-        Bucket: process.env.S3_BUCKET,
+        Bucket: S3_BUCKET,
         Key: Date.now() + "-" + req.file.originalname,
         Body: req.file.buffer,
         ContentType: req.file.mimetype
@@ -180,5 +197,4 @@ app.post("/predict", (req, res) => {
   res.json({ predicted_price: Math.max(2000, Math.round(price)) });
 });
 
-const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on ${PORT}`));
