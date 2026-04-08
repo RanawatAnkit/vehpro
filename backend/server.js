@@ -7,13 +7,15 @@ const multer = require("multer");
 const AWS = require("aws-sdk");
 
 // CONFIGURATION (Hardcoded as requested)
-const DB_HOST = "car-db.cjyhkhxut1mz.us-east-1.rds.amazonaws.com";
+const DB_HOST = "44.195.107.128";
 const DB_USER = "admin";
 const DB_PASS = "password123";
 const DB_NAME = "carsdb";
 const JWT_SECRET = "vehpro_secret_key_2026";
 const AWS_REGION = "us-east-1";
 const S3_BUCKET = "vehpro-images-ankit";
+const AWS_ACCESS_KEY_ID = "YOUR_ACCESS_KEY_HERE";
+const AWS_SECRET_ACCESS_KEY = "YOUR_SECRET_KEY_HERE";
 const PORT = 5000;
 
 // Database Connection
@@ -32,6 +34,8 @@ const upload = multer({ storage: multer.memoryStorage() });
 
 // AWS Config
 AWS.config.update({
+  accessKeyId: AWS_ACCESS_KEY_ID,
+  secretAccessKey: AWS_SECRET_ACCESS_KEY,
   region: AWS_REGION
 });
 const s3 = new AWS.S3();
