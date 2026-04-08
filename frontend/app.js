@@ -1,4 +1,4 @@
-const API = "http://localhost:5000"; // Update to your server IP if needed
+const API = "http://44.195.107.128:5000"; // Update to your server IP if needed
 
 // Helper to get headers with Auth
 const getHeaders = () => {
