@@ -70,6 +70,10 @@
                     <label>Image Upload</label>
                     <input type="file" id="imageFile">
                 </div>
+                <div class="input-group">
+                    <label>OR Image URL</label>
+                    <input type="url" id="imageUrl" placeholder="https://example.com/car.jpg">
+                </div>
                 <div class="input-group" style="grid-column: 1/-1;">
                     <label>Description</label>
                     <textarea id="description" rows="3" placeholder="Describe the vehicle..."></textarea>
@@ -86,6 +90,19 @@
 
     <script src="app.js"></script>
     <script>
+        // Logic to clear URL if file is selected, and vice-versa
+        document.getElementById("imageFile").addEventListener("change", () => {
+            if (document.getElementById("imageFile").files.length > 0) {
+                document.getElementById("imageUrl").value = "";
+            }
+        });
+
+        document.getElementById("imageUrl").addEventListener("input", () => {
+            if (document.getElementById("imageUrl").value.trim() !== "") {
+                document.getElementById("imageFile").value = "";
+            }
+        });
+
         document.getElementById("addCarForm").addEventListener("submit", async (e) => {
             e.preventDefault();
             const formData = new FormData();
@@ -98,6 +115,9 @@
             formData.append("fuel_type", document.getElementById("fuel_type").value);
             formData.append("transmission", document.getElementById("transmission").value);
             formData.append("description", document.getElementById("description").value);
+
+            const imageUrl = document.getElementById("imageUrl").value;
+            if (imageUrl) formData.append("image_url", imageUrl);
 
             const file = document.getElementById("imageFile").files[0];
             if (file) formData.append("image", file);

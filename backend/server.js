@@ -152,15 +152,23 @@ app.post("/add-car", authenticate, adminOnly, upload.single("image"), async (req
 
 // UPDATE CAR (ADMIN)
 app.put("/cars/:id", authenticate, adminOnly, (req, res) => {
-  const { name, brand, price, year, mileage, fuel_type, transmission, description } = req.body;
-  db.query(
-    "UPDATE cars SET name=?, brand=?, price=?, year=?, mileage=?, fuel_type=?, transmission=?, description=? WHERE id=?",
-    [name, brand, price, year, mileage, fuel_type, transmission, description, req.params.id],
-    (err) => {
-      if (err) return res.status(500).send("Update error");
-      res.send("Car updated");
-    }
-  );
+  const { name, brand, price, year, mileage, fuel_type, transmission, description, image_url } = req.body;
+  
+  let query = "UPDATE cars SET name=?, brand=?, price=?, year=?, mileage=?, fuel_type=?, transmission=?, description=?";
+  const params = [name, brand, price, year, mileage, fuel_type, transmission, description];
+
+  if (image_url !== undefined) {
+    query += ", image_url=?";
+    params.push(image_url);
+  }
+
+  query += " WHERE id=?";
+  params.push(req.params.id);
+
+  db.query(query, params, (err) => {
+    if (err) return res.status(500).send("Update error");
+    res.send("Car updated");
+  });
 });
 
 // DELETE CAR (ADMIN)
